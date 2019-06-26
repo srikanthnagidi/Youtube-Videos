@@ -63,7 +63,8 @@ def get_youtube_ids(link):
             y_links.append(elem.get_attribute("href")[32:])
     return y_links
 
-def make_csv(ids): 
+def make_csv(ids):
+    file = open("youtube.csv", 'w')
     for i in range(len(ids)):
         # Every 2 requests, generate a new proxy
         if i%2 == 0:
@@ -81,7 +82,7 @@ def make_csv(ids):
             for link in myset:
                 y_links.extend(get_youtube_ids(link))
             df.at[i, 'youtube_links'] = y_links
-
+            file.write(str(ids[i]) + ','  + " ".join(y_links) + "/n")
         except:
             pass
         
