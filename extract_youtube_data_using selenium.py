@@ -76,7 +76,7 @@ def main():
     
     global df
 
-    for index, row in list(df.iterrows())[7433:7435]:
+    for index, row in list(df.iterrows())[7438:7442]:
         try:
             proxy_index = random.randint(0, len(proxies) - 1)
             proxy = proxies[proxy_index] 
@@ -88,7 +88,7 @@ def main():
             mylist=[]
             alt_req = requests.get("https://api.altmetric.com/v1/id/" + str(alt_id))
             alt_rs= json.loads(alt_req.text)
-            print(alt_req.text)
+            #print(alt_req.text)
             mylist.append({str(alt_id):alt_rs})
             
             y_ids = row['youtube_ids'].split()
@@ -97,46 +97,59 @@ def main():
                 y_data = {}
                 y_data['videoId'] = y_id
                 chrome.get("https://www.youtube.com/watch?v=" + y_id)
+                chrome.implicitly_wait(20)
+                chrome.execute_script("window.scrollTo(0, 5000);")
                 channel_id = chrome.find_element_by_xpath('//a[@class="yt-simple-endpoint style-scope yt-formatted-string"]')
                 c_id = channel_id.get_attribute('href')
                 y_data["channelId"] = c_id[32:]
-                print("ID")
                 v_title =chrome.find_element_by_xpath('//h1[@class="title style-scope ytd-video-primary-info-renderer"]')
                 y_data["title"] = v_title.text
-                print("title")
                 v_description =  chrome.find_element_by_xpath('//div[@id = "description" and @class="style-scope ytd-video-secondary-info-renderer"]')
                 y_data["description"] = v_description.text
-                print("description")
                 elements = chrome.find_elements_by_xpath(
-                        '//yt-formatted-string[@class = "style-scope ytd-toggle-button-renderer style-text"]')
+                    '//yt-formatted-string[@id= "text" and @class = "style-scope ytd-toggle-button-renderer style-text"]')
                 for element in elements:
-                    if "likes" in element.get_attribute("aria-label"):
-                        likes = int(element.get_attribute("aria-label").replace(",", "").split()[0])
-                        y_data['likeCount'] = likes
-                    if "dislikes" in element.get_attribute("aria-label"):
-                        dislikes = int(element.get_attribute("aria-label").replace(",", "").split()[0])
-                        y_data["dislikeCount"] = dislikes
-                print("likes and dislikes")
+                    if "dislikes" in element.get_attribute("aria-label") or "dislike" in element.get_attribute("aria-label"):
+                        try:
+                            dislikes = int (element.get_attribute("aria-label").replace(",", "").split()[0])
+                            y_data["dislikeCount"] = dislikes
+                            continue
+                        except:
+                            y_data["dislikeCount"] = 0
+                            continue
+                    if "likes" in element.get_attribute("aria-label") or "like" in element.get_attribute("aria-label"):
+                        try:
+                            likes = int (element.get_attribute("aria-label").replace(",", "").split()[0])
+                            y_data["likeCount"] = likes
+                        except:
+                            y_data["likeCount"] = 0
+                #print(y_data)
                 v_count = chrome.find_element_by_xpath('//div[@id = "count" and @class="style-scope ytd-video-primary-info-renderer"]')
-                count = int(v_count.text.replace(",", "").split()[0])
+                try:
+                    count = int(v_count.text.replace(",", "").split()[0])
+                except:
+                    count = 0
                 y_data["viewCount"] = count
-                print("viewCount")
-                n_comments = chrome.find_element_by_xpath('//h2[@id="count" and @class="style-scope ytd-comments-header-renderer"]')
-                n_comm = int(n_comments.text.replace(",", "").split()[0])
+                chrome.implicitly_wait(30)
+                chrome.execute_script("window.scrollTo(0, 5000);")
+                n_comments =  chrome.find_element_by_xpath('//yt-formatted-string[@class="count-text style-scope ytd-comments-header-renderer"]')
+                try:
+                    n_comm = int(n_comments.text.replace(",", "").split()[0])
+                except:
+                    n_comm = 0
                 y_data["commentCount"] = n_comm
-                print("commentCount")
                 y_list.append(y_data)
             mylist.append({"youtube":y_list})
             file = open(str(alt_id) + ".txt", "w+")
             json.dump(mylist, file)
             file.close()
         except NoSuchElementException:
-            print('NoSuch')
             alt_id = row["Altmetric_id"]
+            print('No Such - alt_id = ' + str(alt_id))
             file = open(str(alt_id) + ".txt", "w+")
             file.close()
             pass
-            
+        
         except exceptions.StaleElementReferenceException:
             print('Stale')
             alt_id = row["Altmetric_id"]
@@ -153,7 +166,7 @@ def main():
         # Make the call
         try:
             my_ip = urlopen(req).read().decode('utf8')        
-            print('#' + str(n) + ': ' + my_ip)
+            print('#' + str(index) + ': ' + my_ip)
                 
           
         except:  
