@@ -16,7 +16,7 @@ from fake_useragent import UserAgent
 
 from time import sleep
 
-df = pd.read_csv("C://Users//srika//Youtube-Videos//youtube.csv")
+df = pd.read_csv("C://Users//iamab//Desktop//Data youtube//youtube.csv")
 df.columns = ["Altmetric_id", "youtube_ids"]
 
 df.head()
@@ -28,9 +28,10 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common import exceptions
+from selenium.webdriver.support.ui import WebDriverWait
 
 
-chrome = webdriver.Chrome('C:/ProgramData/chocolatey/bin/chromedriver.exe')
+chrome = webdriver.Chrome('C:/Program Files (x86)/Google/Chrome/Application/chromedriver.exe')
 
 def getProx():
     proxies_req = Request('https://www.sslproxies.org/')
@@ -78,7 +79,7 @@ def main():
     
     global df
 
-    for index, row in list(df.iterrows())[7447:7449]:
+    for index, row in list(df.iterrows())[3000:6000]:
         try:
             alt_id = row["Altmetric_id"]
             
@@ -98,7 +99,13 @@ def main():
                 req = Request('http://icanhazip.com')
                 req.set_proxy(proxy['ip'] + ':' + proxy['port'], 'http')
                 sleep(0.5)
-                chrome.get("https://www.youtube.com/watch?v=" + y_ids[i])
+                chrome.get("https://www.youtube.com/watch?v=" +str(y_ids[i]))
+                try:
+                    result = chrome.find_element_by_xpath('//div[@class = "reason style-scope yt-player-error-message-renderer"]').text
+                    if result == "Video unavailable":
+                        continue
+                except:
+                    pass
                 chrome.implicitly_wait(30)
                 chrome.execute_script("window.scrollTo(0, 3000);")
                 channel_id = chrome.find_element_by_xpath('//a[@class="yt-simple-endpoint style-scope yt-formatted-string"]')
@@ -166,12 +173,7 @@ def main():
             json.dump(mylist, file)
             file.close()
             
-        except NoSuchElementException:
-            alt_id = row["Altmetric_id"]
-            print('No Such - alt_id = ' + str(alt_id))
-            file = open(str(alt_id) + ".txt", "w+")
-            file.close()
-            pass
+
         
         except exceptions.StaleElementReferenceException:
             print('Stale')
