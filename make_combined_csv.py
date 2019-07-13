@@ -46,5 +46,5 @@ for i in range(len(files)):
         df.at[i, stat] = stat_list
     json_file.close()
     
-df.to_csv("combined_data.csv")
+df.to_csv("combined_data.csv", index=False)
     
