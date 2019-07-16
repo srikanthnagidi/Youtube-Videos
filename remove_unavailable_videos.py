@@ -16,21 +16,21 @@ df = pd.read_csv("unique_ids.csv", header=0)
 df.head()
 
 driver = webdriver.Chrome("C:/ProgramData/chocolatey/bin/chromedriver.exe")
-driver.maximize_window()
+#driver.maximize_window()
 driver.get("https://www.youtube.com/")
-wait = WebDriverWait(driver, 10)
+#wait = WebDriverWait(driver, 10)
 
-links = ["dqw4w9wgxcq"]
+links = ["dqw4w9wgxcq", "9nPTDYqGcdE"]
 df["status"] = ""
-for y_id in df.youtube_ids.values[:100]:
+for y_id in df.youtube_ids.values[:30]:
     driver.get("https://www.youtube.com/watch?v=" + y_id)
     driver.implicitly_wait(30)
     avail_text = driver.find_element_by_xpath('//ytd-watch-flexy').text
-    if avail_text == "Video unavailable":
-        df["youtube_ids" == y_id, "status"] = "U"
+    if "unavailable" in avail_text:
+        df.status[df.youtube_ids == y_id] = "U"
         print(y_id,  " unavailable")
     else:
-        df["youtube_ids" == y_id, "status"] = "A"
+        df.status[df.youtube_ids == y_id] = "A"
         print(y_id,  " available")
 driver.close()
 
