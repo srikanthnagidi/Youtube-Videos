@@ -12,12 +12,12 @@ import pandas as pd
 import requests
 from time import sleep
 
-df = pd.read_csv("altmetricIDS.csv", header=None)
+df = pd.read_csv("missing_youtube_ids.csv", header=None)
 df.columns = ['Altmetrics_Id']
 df["youtube_links"] = ""
 ids = np.array(df['Altmetrics_Id'])
 
-cookies = {'explorer_user': 'M2hyUUM4NHZSQ0Ywb2Z1bmkxdFJiWkMySFZyUEdYcTdDVzA3dS9kaTE2c3RxY1Z2dk80ZHVRbkpyYmN5RlJPZy0tTGUva3AwazNKZldnM3hEcGZwQUdqdz09--91d8e16ad25aff9d70817a9ed793e170f358bc60'}
+cookies = {'explorer_user': 'anZ0c3lMMkx3VklDRUt1RkMyR3hmdmVZZlE3ZXB0ZlprYW84WkQraCtBc08vaXpDUEY4WFYzUWdlN2hsS1FnNy0taVZrNlQyOXduaGw5bHNxTGVIN21jdz09--52145f21346de5d6f994772fc975ce0050d15136'}
 
 
 def get_all_pages(main_link):
@@ -41,7 +41,7 @@ def get_youtube_ids(link):
     return y_links
 
 def main():
-    file = open('youtube.csv', 'w')
+    file = open('youtube_missing.csv', 'w')
     for i in range(len(ids)):
         try:
             y_links = get_youtube_ids('https://www.altmetric.com/details/' + str(ids[i]) + '/video')

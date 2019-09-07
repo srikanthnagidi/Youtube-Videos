@@ -2,12 +2,12 @@ from selenium import webdriver
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv("C://Users//iamab//Desktop//Data youtube//difference.csv", header=None, )
+df = pd.read_csv("unique_ids_2.csv", header=0 )
 #https://www.youtube.com/watch?v=55JMv3Y_u0o
 #links from dataset
 links=["https://www.youtube.com/watch?v=55JMv3Y_u0o","https://www.youtube.com/watch?v=YFSwJuJqekw&list=RDR59sfLVdBJA&index=3"]
 
-driver = webdriver.Chrome("C:/Program Files (x86)/Google/Chrome/Application/chromedriver.exe")
+driver = webdriver.Chrome("C:/ProgramData/chocolatey/bin/chromedriver.exe")
 driver.get("https://www.youtube.com/")
 
 df["status"] = ""
