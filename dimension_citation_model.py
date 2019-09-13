@@ -44,7 +44,7 @@ decisionresult = decision.predict(testdata)
 print(classification_report(testtarget,decisionresult))
 sklearn.metrics.accuracy_score(testtarget, decisionresult)
 
-#Random Forest Classifier
+#Random Forest Classifier--
 random = RandomForestClassifier(n_estimators = 10, criterion = 'entropy', random_state = 0)
 random.fit(traindata,traintarget.values.ravel())
 randomresult = random.predict(testdata)
