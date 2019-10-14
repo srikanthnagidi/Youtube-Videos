@@ -6,9 +6,6 @@ Created on Fri Sep 13 12:45:51 2019
 """
 
 import pandas as pd
-from matplotlib import pyplot as plt
-import numpy as np
-import ast
 from datetime import datetime
 
 
