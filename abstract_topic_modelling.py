@@ -192,3 +192,4 @@ dominant_topics = df_dominant_topic.Dominant_Topic.values.tolist()
 
 df_abstracts['Topics'] = pd.Series(dominant_topics, index = df_abstracts.index)
 df_abstracts.loc[:, "Topics"].value_counts()
+df_abstracts.to_csv("alt_abstracts_topics.csv", index=False)
