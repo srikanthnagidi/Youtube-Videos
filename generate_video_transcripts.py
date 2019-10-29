@@ -24,25 +24,24 @@ df_abstracts = df_abstracts[df_abstracts.lang == 'en']
 from youtube_transcript_api import YouTubeTranscriptApi
 
 import ast
-df_id_alt = pd.DataFrame(columns = ['id', 'altmetric_id', 'abstract', 'transcript'])
-i=0
-for index, row in df_abstracts.loc[100:, :].iterrows():
-    for v_id in ast.literal_eval(row['link']):
-        df_id_alt.loc[i, 'altmetric_id'] = row['altmetric_id']
-        df_id_alt.loc[i, 'abstract'] = row['abstract']
-        df_id_alt.loc[i, 'id'] = v_id
-        try:
-            d = YouTubeTranscriptApi.get_transcript(v_id, languages=['en'])
-            st = ""
-            for lt in d:
-                st = st + " " + lt['text']
-            df_id_alt.loc[i, 'transcript'] = st
-            i=i+1
-        except:
-            i=i+1
-            continue
-    print (index)
+df_id_alt = pd.DataFrame(columns = ['id', 'transcript'])
+v_ids=set()
+for index, row in df_abstracts.iterrows():
+    v_ids = v_ids.union(set(ast.literal_eval(row['link'])))
 
+for v_id in v_ids:
+    df_id_alt.loc[i, 'id'] = v_id
+    try:
+        d = YouTubeTranscriptApi.get_transcript(v_id, languages=['en'])
+        st = ""
+        for lt in d:
+            st = st + " " + lt['text']
+        df_id_alt.loc[i, 'transcript'] = st
+        i=i+1
+    except YouTubeTranscriptApi.CouldNotRetrieveTranscript:
+        i=i+1
+        continue
+    print(v_id)
+    
 df_id_alt.to_csv("transcript1.csv", index=False)
-        
-        
+df_id_alt.to_json("transcript1.txt", orient = "index")
