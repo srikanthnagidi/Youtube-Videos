@@ -66,8 +66,42 @@ for index, row in df_id_video.iterrows():
     df_id_video.loc[index, "CommentCount"] = pd.to_numeric(ast.literal_eval(row['CommentCount']), errors='coerce').mean()
     print(index)
     
-data = df_id_video.loc[:, ['cited_by_gplus_count', 'cited_by_wikipedia_count','number_of_days',
+data = df_id_video.loc[:, ['cited_by_gplus_count', 'cited_by_wikipedia_count',
        'Video mentions', 'avg_like_dislike_ratio', 'Response_Rate', 'Facebook mentions','Twitter mentions',
        'News mentions', 'Blog mentions', 'views', 'likes', 'dislikes', 'CommentCount']]
+data = data.fillna(0)
 
 target =  df_id_video.loc[:, 'citation_class']
+
+import sklearn
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.preprocessing import StandardScaler
+
+
+traindata,testdata,traintarget,testtarget = train_test_split(data, target, test_size=0.25)
+
+#feature scaling
+sc = StandardScaler()
+traindata = sc.fit_transform(traindata)
+testdata = sc.transform(testdata)
+
+#Random Forest Classifier--
+random = RandomForestClassifier(n_estimators = 10, criterion = 'entropy', random_state = 42)
+random.fit(traindata,traintarget.values.ravel())
+randomresult = random.predict(testdata)
+print(classification_report(testtarget,randomresult))
+sklearn.metrics.accuracy_score(testtarget, randomresult)
+
+import tensorflow as tf
+model = tf.keras.models.Sequential([
+  tf.keras.layers.Flatten(input_shape=(13,)),
+  tf.keras.layers.Dense(100, activation='relu'),
+  tf.keras.layers.Dropout(0.5),
+  tf.keras.layers.Dense(100, activation='softmax')])
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+model.fit(traindata, traintarget, epochs=5)
+#print the train and test accuracy
+print("Train Accuracy: ", model.evaluate(traindata, traintarget, verbose=2)[1])
+print("Test Accuracy: ", model.evaluate(testdata,  testtarget, verbose=2)[1])
