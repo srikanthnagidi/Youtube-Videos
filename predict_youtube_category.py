@@ -39,13 +39,24 @@ testdata = sc.transform(testdata)
 #Random Forest Classifier--
 random = RandomForestClassifier(n_estimators = 10, criterion = 'entropy', random_state = 0)
 random.fit(traindata,traintarget.values.ravel())
+trainresult = random.predict(traindata)
+print(classification_report(traintarget,trainresult))
 randomresult = random.predict(testdata)
 print(classification_report(testtarget,randomresult))
 sklearn.metrics.accuracy_score(testtarget, randomresult)
 
 #Decision Tree Classifier
-decision = DecisionTreeClassifier(criterion = 'entropy', random_state = 0)
+decision = DecisionTreeClassifier(criterion = "gini", splitter = 'random', max_leaf_nodes =10 , min_samples_leaf = 5, max_depth= 10)
 decision.fit(traindata,traintarget)
+train_result = decision.predict(traindata)
+print(classification_report(traintarget,train_result))
 decisionresult = decision.predict(testdata)
 print(classification_report(testtarget,decisionresult))
 sklearn.metrics.accuracy_score(testtarget, decisionresult)
+
+#logistic regression
+lr = LogisticRegression(random_state = 0)
+lr.fit(traindata, traintarget.values.ravel())
+regres = lr.predict(testdata)
+print(classification_report(testtarget,regres))
+sklearn.metrics.accuracy_score(testtarget, regres)

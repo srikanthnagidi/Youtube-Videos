@@ -47,8 +47,10 @@ print(classification_report(testtarget,regres))
 sklearn.metrics.accuracy_score(testtarget, regres)
 
 #Decision Tree Classifier
-decision = DecisionTreeClassifier(criterion = 'entropy', random_state = 0)
+decision = DecisionTreeClassifier(criterion = "gini", splitter = 'random', max_leaf_nodes =10 , min_samples_leaf = 5, max_depth= 10)
 decision.fit(traindata,traintarget)
+train_result = decision.predict(traindata)
+print(classification_report(traintarget,train_result))
 decisionresult = decision.predict(testdata)
 print(classification_report(testtarget,decisionresult))
 sklearn.metrics.accuracy_score(testtarget, decisionresult)

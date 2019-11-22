@@ -32,11 +32,6 @@ for index, row in df_id_video.iterrows():
     
 df_id_video = df_id_video[df_id_video.abstract != "0"]
 
-from nltk.corpus import stopwords
-from gensim.models.doc2vec import TaggedDocument
-from gensim.models import Doc2Vec
-from sklearn.feature_extraction.text import TfidfVectorizer
-
 vectorizer = TfidfVectorizer()
 def cosine_sim(d1, d2):
     tfidf = vectorizer.fit_transform([d1, d2])
