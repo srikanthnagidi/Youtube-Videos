@@ -41,7 +41,7 @@ def get_youtube_ids(link):
     return y_links
 
 def main():
-    file = open('youtube_missing.csv', 'w')
+    file = open('youtube_links.csv', 'w')
     for i in range(len(ids)):
         try:
             y_links = get_youtube_ids('https://www.altmetric.com/details/' + str(ids[i]) + '/video')

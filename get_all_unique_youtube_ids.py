@@ -7,7 +7,7 @@ Created on Thu Jul 11 16:52:46 2019
 
 import pandas as pd
 
-df = pd.read_csv("youtube_missing.csv")
+df = pd.read_csv("youtube_links.csv")
 df.columns = ["Altmetric_id", "youtube_ids"]
 
 df.head()
