@@ -22,7 +22,7 @@ driver = webdriver.Chrome("C:/Program Files (x86)/Google/Chrome/Application/chro
 driver.maximize_window()
 driver.get("https://www.youtube.com/")
 wait = WebDriverWait(driver, 10)
-for index, row in df_id.head(10000).iterrows():
+for index, row in df_id.iterrows():
     x=row["youtube_ids"]
     if (row["status"] == 'U'):
         df.loc[len(df)] = [x, "", "","","","","","","","", ""]

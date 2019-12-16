@@ -7,7 +7,7 @@ Created on Thu Jul 11 16:52:46 2019
 
 import pandas as pd
 
-df = pd.read_csv("youtube_links.csv")
+df = pd.read_csv("C://Users//iamab//Desktop//Data youtube//youtube.csv")
 df.columns = ["Altmetric_id", "youtube_ids"]
 
 df.head()
@@ -28,4 +28,4 @@ for index, row in df.iterrows():
 df_ids = df_ids.drop_duplicates()
 len(df_ids)
 
-df_ids.to_csv("unique_ids_2.csv", index=False)
+df_ids.to_csv("unique_ids.csv", index=False)
